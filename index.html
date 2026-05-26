@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OXY_OS // DUAL_CORE</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/s-pro-v/hub@main/alert.css">
+    <!-- Dodano favicon SVG inline -->
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2016%2016%27%3E%3Ccircle%20cx=%228%22%20cy=%228%22%20r=%228%22%20fill=%22orange%22/%3E%3Ctext%20x=%2250%25%22%20y=%2211%22%20text-anchor=%22middle%22%20font-size=%229%22%20font-family=%27JetBrains%20Mono,%20monospace%27%20fill=%22%2323292d%22%3EOX%3C/text%3E%3C/svg%3E">
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Share+Tech+Mono&display=swap"
+        rel="stylesheet">
+    <!-- Dodaj biblioteke ikon (np. Font Awesome) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/s-pro-v/cyber-code@main/monaco-css.js"></script>
+
+    <div class="oxy-grid-layout">
+        <div class="panel-container control-matrix">
+            <div class="corner-bracket top-left"></div>
+            <div class="corner-bracket bottom-right"></div>
+            <span class="tech-mark"><i class="fa-solid fa-microchip"></i> SYS_CTRL | STATIC_DUAL_v3.22</span>
+
+            <h1 class="main-heading"><i class="fa-solid fa-arrows-left-right"></i> TRANSFER DWUKANAŁOWY</h1>
+            <div class="radiator">
+                <span></span><span></span><span></span><span></span><span></span>
+            </div>
+
+            <div class="theme-switcher" style="margin-bottom: 2rem;">
+                <button id="sys-theme-toggle" class="oxy-btn" type="button">
+                    <i class="fa-solid fa-moon"></i> TRYB: CIEMNY
+                </button>
+            </div>
+
+            <div class="data-group">
+                <label class="data-label"><i class="fa-solid fa-key"></i> KLUCZ DEKRYPCJI (XOR)</label>
+                <div style="display: flex; gap: 0.2rem; align-items: stretch;">
+                    <input type="password" id="sys-xor-key" class="oxy-input"
+                        placeholder="WPROWADŹ KLUCZ ODSZYFROWUJĄCY..." style="flex: 1; min-width: 200px;" />
+                    <button id="sys-fetch-token" class="oxy-btn small" style="margin-top: 0;">
+                        <i class="fa-solid fa-circle-down"></i> TOKEN
+                    </button>
+
+                    <div id="sys-key-status" class="hidden alert" aria-live="polite" style="width: 100%;">
+                        <span aria-hidden="true"><i class="fa-solid fa-check"></i></span> Klucz
+                    </div>
+                    <div class="zebra-stripe hidden" id="sys-loader-fetch-token" style="width: 100%;"></div>
+                </div>
+            </div>
+
+            <div class="data-group">
+                <label class="data-label"><i class="fa-solid fa-cloud-arrow-down"></i> SYNCHRONIZACJA ZDALNA
+                    (PULL)</label>
+                <div style="display: flex; gap: 0.2rem; flex-direction: column;">
+                    <button id="sys-fetch-data" class="oxy-btn" disabled>
+                        <i class="fa-solid fa-download"></i> POBIERZ DANE Z REPOZYTORIUM
+                    </button>
+                    <div class="zebra-stripe hidden" id="sys-loader-fetch-data"></div>
+                </div>
+            </div>
+
+            <hr class="divider" />
+
+            <div class="data-group">
+                <label class="data-label"><i class="fa-solid fa-database"></i> ZAPIS W BAZIE (PUSH)</label>
+                <div style="display: flex; gap: 0.2rem; flex-direction: column;">
+                    <button id="sys-submit" class="oxy-btn" disabled>
+                        <i class="fa-solid fa-upload"></i> WYŚLIJ SKOMPILOWANE DANE
+                    </button>
+                    <div class="zebra-stripe hidden" id="sys-loader-push"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-container workstation-box">
+            <div class="corner-bracket top-left"></div>
+            <div class="corner-bracket bottom-right"></div>
+            <div class="panel-header-mark">
+                <span class="indicator-dot" id="m1-status-dot"></span>
+                <label class="data-label"><i class="fa-solid fa-computer"></i> STACJA ROBOCZA 01 | <span
+                        class="w-color"> MIESIĄC (JSON
+                        OBJECT)</span></label>
+            </div>
+            <div id="sys-editor-m1" class="oxy-editor-wrapper"></div>
+        </div>
+
+        <div class="panel-container workstation-box">
+            <div class="corner-bracket top-left"></div>
+            <div class="corner-bracket bottom-right"></div>
+            <div class="panel-header-mark">
+                <span class="indicator-dot" id="m2-status-dot"></span>
+                <label class="data-label"><i class="fa-solid fa-server"></i> STACJA ROBOCZA 02 | <span class="s-color">
+                        MIESIĄC (JSON
+                        OBJECT)</span></label>
+            </div>
+            <div id="sys-editor-m2" class="oxy-editor-wrapper"></div>
+        </div>
+
+        <div class="panel-container event-panel">
+            <div class="event-log-title">
+                <div class="bg">
+                    <div class="data-label"><i class="fa-solid fa-scroll"></i> EVENT LOG:</div>
+                </div>
+            </div>
+            <div id="sys-terminal" class="terminal-output">SYSTEM URUCHOMIONY. OCZEKIWANIE NA MONACO EDITOR...</div>
+        </div>
+    </div>
+
+    <div id="confirm-modal" class="system-alert-modal" data-alert-type="warning" role="dialog" aria-modal="true"
+        aria-labelledby="confirm-modal-title" aria-describedby="confirm-modal-message">
+        <div class="modal-content">
+            <div class="system-alert-header">
+                <h2 class="system-alert-title" id="confirm-modal-title"><i class="fa-solid fa-triangle-exclamation"></i>
+                    Potwierdzenie</h2>
+                <button id="confirm-modal-close" class="close-btn" type="button" aria-label="Zamknij modal"><i
+                        class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="system-alert-body">
+                <div class="system-alert-main-title" id="confirm-modal-main-title"><i
+                        class="fa-regular fa-circle-question"></i> Czy chcesz kontynuować?</div>
+                <p class="system-alert-message" id="confirm-modal-message"><i class="fa-solid fa-info-circle"></i>
+                    Potwierdź swoją akcję.</p>
+            </div>
+            <div class="system-alert-footer">
+                <button type="button" class="system-alert-btn cancel-btn" id="confirm-modal-cancel"><i
+                        class="fa-solid fa-ban"></i> Anuluj</button>
+                <button type="button" class="system-alert-btn system-alert-btn-primary" id="confirm-modal-confirm"><i
+                        class="fa-solid fa-check"></i> Potwierdź</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+
+</html>
