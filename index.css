@@ -380,7 +380,7 @@ i {
     font-weight: 600;
     letter-spacing: 0.1rem;
     text-transform: uppercase;
-    margin-bottom: 0.2rem;
+    margin-bottom: 0.125rem;
     color: var(--highlight-color);
     padding: 0rem 0.5rem;
     background-color: var(--bg-tertiary);
